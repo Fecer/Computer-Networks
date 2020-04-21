@@ -1,8 +1,8 @@
 class Frame:
     id=0
     def __init__(self, buffer, seq):
-        frame.info = buffer
-        frame.seq == next_frame_to_send
+        Frame.info = buffer
+        Frame.seq == seq
     def crc(self):
         
 
