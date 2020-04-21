@@ -8,8 +8,9 @@ if __name__ == '__main__':
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    for data in ["chenshan", "yuanhui", "chendianqiang"]:
-        s.sendto(data.encode(), ('127.0.0.1', 9999))
+    while True:
+        data = input("请输入内容:")
+        s.sendto(data.encode('utf-8'), ('127.0.0.1', 8888))
         print(s.recv(1024))
 
     s.close()
