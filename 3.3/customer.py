@@ -5,6 +5,7 @@ import socket
 from frame import packet, Frame
 
 if __name__ == '__main__':
+    id=0    # 发送帧编号
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
