@@ -14,7 +14,7 @@ def dezerocheck(str):
             maxfive+=1
             if maxfive==5:
                 if index+1==len(strlist):
-                    a=0
+                    strlist.append('0')
                 del (strlist[index+1])
                 maxfive=0
         else:
