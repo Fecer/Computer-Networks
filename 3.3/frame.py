@@ -82,7 +82,7 @@ class Frame:
         # TODO：判断是否余数为0，帧发送是否正确
 
     def zerocheck(self):
-        strlist=[str(x) for x in frame]
+        strlist=[str(x) for x in self.frame]
         maxfive = 0
         index = 0
         while True:
