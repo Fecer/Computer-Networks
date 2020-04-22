@@ -59,6 +59,7 @@ if __name__ == '__main__':
             else:                 #先前发送的ack丢失了
                 print("ack lost!")
             s.sendto(str(1-frame_expected).encode('utf-8'),addr)
+            print("got frame ",1-frame_expected)
         else:
             print("frame error!")
 
