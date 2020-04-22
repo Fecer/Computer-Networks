@@ -79,7 +79,14 @@ class Frame:
 
         remainder = info[-crcSize::]  # 余数
         print('{:10}\t{}'.format('CRC Verify：', remainder))
-        # TODO：判断是否余数为0，帧发送是否正确
+
+        strlist = [str(x) for x in remainder]
+        data = ''.join(strlist)
+        if data == '0000000000000000':
+            return True
+        else:
+            return False
+
 
     def zerocheck(self):
         strlist=[str(x) for x in self.frame]

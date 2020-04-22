@@ -26,9 +26,9 @@ if __name__ == '__main__':
         event = ''
         time.sleep(2)
         event = s.recv(1024)
-        event = event.decode()
         if event == '':
             continue
+        event = event.decode()
 
         if event == str(next_frame_to_send):   # 正确送达
             next_frame_to_send = next_frame_to_send ^ 1  # 改变序列号
