@@ -1,8 +1,8 @@
 import numpy as np
 
 class Frame:
-    def __init__(self, seq):
-        self.data = []      # 数据包
+    def __init__(self, seq,data=[]):
+        self.data = data      # 数据包
         self.seq = seq      # 序列号
         self.frame = []     # 要发送的帧
 
@@ -81,4 +81,20 @@ class Frame:
         print('{:10}\t{}'.format('CRC Verify：', remainder))
         # TODO：判断是否余数为0，帧发送是否正确
 
-
+    def zerocheck(self):
+        strlist=[str(x) for x in frame]
+        maxfive = 0
+        index = 0
+        while True:
+            if strlist[index] == '1':
+                maxfive = maxfive + 1
+                if maxfive == 5:
+                    strlist.insert(index + 1, '0')
+                    index += 1
+                    maxfive = 0
+            else:
+                maxfive = 0
+            index += 1
+            if index == len(strlist):
+                break
+        self.frame=[int(x) for x in strlist]
