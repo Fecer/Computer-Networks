@@ -27,7 +27,8 @@ def dezerocheck(str):
 #等待传输
 def wait():
     global addr
-    data,addr=s.recvfrom(1024).decode()
+    data,addr=s.recvfrom(1024)
+    data=data.decode()
     data=dezerocheck(data)
     seq=int(data[0])
     #类型转换
