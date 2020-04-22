@@ -1,14 +1,14 @@
 import numpy as np
 
 class Frame:
-    def __init__(self, buffer, seq, frame):
-        self.info = buffer  # 数据包
+    def __init__(self, seq, frame):
+        self.data = np.random.randint(0, 2, 8)  # 数据包
         self.seq = seq      # 序列号
         self.frame = frame  # 要发送的帧
 
     # 生成CRC校验码 拼接成完整帧
     def generateCRC(self):
-        info = self.info        # 待校验信息
+        info = self.data        # 待校验信息
         poly = [1, 0, 0, 0,
                 1, 0, 0, 0,
                 0, 0, 0, 1,
@@ -40,10 +40,10 @@ class Frame:
 
         print('{:10}\t{}'.format('CRC Generate：', remainder))
         print('{:10}\t{}'.format('发送帧：', output))
-        self.frame = output # 完整的发送帧的内容
+        return output # 返回Data + CheckSum
 
     def verifyCRC(self):
-        info = self.info  # 待校验信息
+        info = self.data  # 待校验信息
         poly = [1, 0, 0, 0,
                 1, 0, 0, 0,
                 0, 0, 0, 1,
@@ -66,18 +66,4 @@ class Frame:
         print('{:10}\t{}'.format('CRC Verify：', remainder))
         # TODO：判断是否余数为0，帧发送是否正确
 
-# 数据
-class data(object):
-    def __init__(self, buffer):
-        self.buffer = buffer
-        return
-
-    # 随机生成8位二进制数
-    def generateBuffer(self):
-        self.buf = np.random.randint(0, 2, 8)
-        return
-
-    # # 透明传输
-    # def transparency(self):
-    #     return
 
