@@ -16,7 +16,8 @@ if __name__ == '__main__':
 
         sendFrame = Frame(seq=next_frame_to_send)   # 记录序列号
         next_frame_to_send = next_frame_to_send ^ 1
-        sendFrame.buildMainPart() # 合成核心部分
+        sendFrame.genData()         # 生成随机数据
+        sendFrame.buildMainPart()   # 合成核心部分
         sendFrame.generateCRC()     # 生成校验和
         sendFrame.addHeadTail()     # 添加帧头尾
 

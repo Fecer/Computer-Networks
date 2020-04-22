@@ -2,9 +2,12 @@ import numpy as np
 
 class Frame:
     def __init__(self, seq):
-        self.data = list(np.random.randint(0, 2, 8))  # 数据包
+        self.data = []      # 数据包
         self.seq = seq      # 序列号
-        self.frame = []  # 要发送的帧
+        self.frame = []     # 要发送的帧
+
+    def genData(self):
+        self.data = list(np.random.randint(0, 2, 8))
 
     def getFrame(self):
         return self.frame
