@@ -15,6 +15,6 @@ if __name__ == '__main__':
 
         # if(verifyCRC() == True):
         #     # TODO：区分Seq为0 or 1
-        #     s.sendto("ACK".encode()+data,addr)
+        s.sendto("ACK".encode()+data,addr)
         # else:
         #     s.sendto("NAK".encode() + data, addr)

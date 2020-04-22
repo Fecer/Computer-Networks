@@ -1,14 +1,24 @@
 import numpy as np
 
 class Frame:
-    def __init__(self, seq, frame):
-        self.data = np.random.randint(0, 2, 8)  # 数据包
+    def __init__(self, seq):
+        self.data = list(np.random.randint(0, 2, 8))  # 数据包
         self.seq = seq      # 序列号
-        self.frame = frame  # 要发送的帧
+        self.frame = []  # 要发送的帧
+
+    def getFrame(self):
+        return self.frame
+
+    def buildMainPart(self):
+        self.frame = self.data.copy()
+        self.frame.insert(0, self.seq)
+
+    def addHeadTail(self):
+        self.frame = [0, 1, 1, 1, 1, 1, 1, 0] + self.frame + [0, 1, 1, 1, 1, 1, 1, 0]
 
     # 生成CRC校验码 拼接成完整帧
     def generateCRC(self):
-        info = self.data        # 待校验信息
+        info = self.frame        # 待校验信息
         poly = [1, 0, 0, 0,
                 1, 0, 0, 0,
                 0, 0, 0, 1,
@@ -38,9 +48,11 @@ class Frame:
         for i in remainder:
             output.append(i)
 
+        print("------Frame_{}------".format(self.seq))
         print('{:10}\t{}'.format('CRC Generate：', remainder))
-        print('{:10}\t{}'.format('发送帧：', output))
-        return output # 返回Data + CheckSum
+        print('{:10}\t{}'.format('帧数据：', output))
+        print("-------------------")
+        self.frame = output
 
     def verifyCRC(self):
         info = self.data  # 待校验信息

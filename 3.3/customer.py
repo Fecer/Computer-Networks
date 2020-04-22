@@ -2,7 +2,10 @@
 # UDP 客户端代码
 
 import socket
+import time
 from frame import Frame
+
+# def timer():
 
 if __name__ == '__main__':
     id=0    # 发送帧编号
@@ -10,10 +13,16 @@ if __name__ == '__main__':
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     while True:
+
         sendFrame = Frame(seq=next_frame_to_send)   # 记录序列号
         next_frame_to_send = next_frame_to_send ^ 1
+        sendFrame.buildMainPart() # 合成核心部分
+        sendFrame.generateCRC()     # 生成校验和
+        sendFrame.addHeadTail()     # 添加帧头尾
 
-        data = input("请输入内容:")
+        temp = [str(x) for x in sendFrame.getFrame()]
+        data = ''.join(temp)        # 生成数据字符串
+
         s.sendto(data.encode('utf-8'), ('127.0.0.1', 8888))
         print(s.recv(1024))
 
