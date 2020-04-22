@@ -2,7 +2,7 @@
 # UDP 客户端代码
 
 import socket
-from frame import packet, Frame
+from frame import data, Frame
 
 if __name__ == '__main__':
     id=0    # 发送帧编号

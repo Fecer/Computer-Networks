@@ -66,8 +66,8 @@ class Frame:
         print('{:10}\t{}'.format('CRC Verify：', remainder))
         # TODO：判断是否余数为0，帧发送是否正确
 
-# 数据包
-class packet(object):
+# 数据
+class data(object):
     def __init__(self, buffer):
         self.buffer = buffer
         return
