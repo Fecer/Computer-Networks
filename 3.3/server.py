@@ -32,9 +32,8 @@ def wait():
     data=dezerocheck(data)
     seq=int(data[0])
     #类型转换
-    data=data[1:]
     data=[int(x) for x in list(data)]
-    r=Frame(seq,data)
+    r=Frame(seq,data=data)
     #验证cksum
     if r.verifyCRC() == False:
         return 0
