@@ -51,10 +51,9 @@ class Frame:
         for i in remainder:
             output.append(i)
 
-        print("------Frame_{}------".format(self.seq))
+        print("Sequence{}:".format(self.seq))
         print('{:10}\t{}'.format('CRC Generate：', remainder))
         print('{:10}\t{}'.format('帧数据：', output))
-        print("-------------------")
         self.frame = output
 
     def verifyCRC(self):
