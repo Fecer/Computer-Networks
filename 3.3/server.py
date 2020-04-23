@@ -3,37 +3,37 @@
 import socket
 from frame import Frame
 
-#接收方
-def dezerocheck(str):
-    str=str[8:-8]
-    strlist =list(str)
-    maxfive=0
-    index=0
-    while True:
-        if strlist[index]=='1':
-            maxfive+=1
-            if maxfive==5:
-                if index+1==len(strlist):
-                    strlist.append('0')
-                del (strlist[index+1])
-                maxfive=0
-        else:
-            maxfive=0
-        index+=1
-        if index==len(strlist):
-            break
-    return ''.join(strlist)
+# 掐头去尾
+def delHeadTail(str):
+    # str = str[8:-8]
+    # strlist = list(str)
+    # maxfive=0
+    # index=0
+    # while True:
+    #     if strlist[index]=='1':
+    #         maxfive+=1
+    #         if maxfive==5:
+    #             if index+1==len(strlist):
+    #                 strlist.append('0')
+    #             del (strlist[index+1])
+    #             maxfive=0
+    #     else:
+    #         maxfive=0
+    #     index+=1
+    #     if index==len(strlist):
+    #         break
+    return str[8:-8]
 
-#等待传输
+# 等待传输
 def wait():
     global addr
-    data,addr=s.recvfrom(1024)
-    data=data.decode()
-    data=dezerocheck(data)
-    seq=int(data[0])
-    #类型转换
-    data=[int(x) for x in list(data)]
-    r=Frame(seq,data=data)
+    data,addr = s.recvfrom(1024)
+    data = data.decode()
+    data = delHeadTail(data)
+    seq = int(data[0])
+    # 类型转换
+    data = [int(x) for x in list(data)]
+    r = Frame(seq,data=data)
     #验证cksum
     if r.verifyCRC() == False:
         return 0
@@ -41,9 +41,6 @@ def wait():
         return r
 
 if __name__ == '__main__':
-
-
-
     # 建立连接
     s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     s.bind(('127.0.0.1',8888))
@@ -51,19 +48,14 @@ if __name__ == '__main__':
 
     frame_expected = 0
     while True:
-        r=wait()
-        if r!=0:                  #通过crc
-            if r.seq==frame_expected:
-                frame_expected=1-frame_expected
-            else:                 #先前发送的ack丢失了
-                print("ack lost!")
-            s.sendto(str(1-frame_expected).encode('utf-8'),addr)
-            print("got frame ",1-frame_expected)
+        r = wait()
+        if r != 0:                  # 通过crc验证
+            if r.seq == frame_expected:
+                frame_expected = 1 - frame_expected
+            else:                   # 先前发送的ack丢失了
+                print("Ack lost!")
+            s.sendto(str(1 - frame_expected).encode('utf-8'), addr)
+            print("Got frame ",1 - frame_expected)
         else:
-            print("frame error!")
+            print("Frame error!")   # 接收到的帧有错误
 
-        # if(verifyCRC() == True):
-        #     # TODO：区分Seq为0 or 1
-        #     s.sendto("ACK".encode()+data,addr)
-        # else:
-        #     s.sendto("NAK".encode() + data, addr)
