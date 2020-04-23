@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<values title="Info">
+    <UDPPort>8888</UDPPort>
+    <FilterError>10</FilterError>
+    <FilterLost>10</FilterLost>
+</values>
