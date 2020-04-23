@@ -56,16 +56,18 @@ if __name__ == '__main__':
     frame_expected = 0
     while True:
         print("----------Frame{}----------".format(cnt))
+        print("Expect frame", frame_expected)
         r = wait()
+        print("Got frame", frame_expected)
         if r != 0:                  # 通过crc验证
+            print("Frame CRC right")
             if r.seq == frame_expected:
                 frame_expected = 1 - frame_expected
             else:                   # 先前发送的ack丢失了
                 print("Ack lost!")
             s.sendto(str(1 - frame_expected).encode('utf-8'), addr)
-            print("Got frame",1 - frame_expected)
         else:
-            print("Frame error!")   # 接收到的帧有错误
+            print("Frame CRC error")   # 接收到的帧有错误
         print("---------------------------")
         cnt += 1
 
