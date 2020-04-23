@@ -1,6 +1,7 @@
 #coding=utf-8
 #UDP 协议服务器代码
 import socket
+from xml.dom.minidom import parse
 from frame import Frame
 
 # 掐头去尾
@@ -41,10 +42,14 @@ def wait():
         return r
 
 if __name__ == '__main__':
+    # 获取参数
+    DOMTree = parse("config.xml")
+    collection = DOMTree.documentElement
+    port = int(collection.getElementsByTagName('UDPPort')[0].childNodes[0].data)
     # 建立连接
     s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    s.bind(('127.0.0.1',8888))
-    print("Bind UDP on port:8888")
+    s.bind(('127.0.0.1', port))
+    print("Bind UDP on port:", port)
 
     frame_expected = 0
     while True:
