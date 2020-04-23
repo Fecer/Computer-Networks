@@ -42,6 +42,8 @@ def wait():
         return r
 
 if __name__ == '__main__':
+    cnt = 1     # 总帧编号
+
     # 获取参数
     DOMTree = parse("config.xml")
     collection = DOMTree.documentElement
@@ -53,6 +55,7 @@ if __name__ == '__main__':
 
     frame_expected = 0
     while True:
+        print("----------Frame{}----------".format(cnt))
         r = wait()
         if r != 0:                  # 通过crc验证
             if r.seq == frame_expected:
@@ -60,7 +63,9 @@ if __name__ == '__main__':
             else:                   # 先前发送的ack丢失了
                 print("Ack lost!")
             s.sendto(str(1 - frame_expected).encode('utf-8'), addr)
-            print("Ack frame ",1 - frame_expected)
+            print("Got frame",1 - frame_expected)
         else:
             print("Frame error!")   # 接收到的帧有错误
+        print("---------------------------")
+        cnt += 1
 

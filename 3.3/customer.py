@@ -14,7 +14,7 @@ def newFrame():
     return sendFrame
 
 if __name__ == '__main__':
-    counterErr = 6          # 发送帧编号
+    counterErr = 10          # 发送帧编号
     counterLost = 8
     next_frame_to_send = 0  # 下一帧序列号
     cnt = 0                 # 总帧编号
@@ -37,20 +37,21 @@ if __name__ == '__main__':
     while True:
 
 
-        if counterLost == 9:            # 丢弃一帧
-            print("Send Lost Frame")
+        if counterLost == filterLost:            # 丢弃一帧
+            print("Send Lost Frame", next_frame_to_send)
             counterLost = 0
         else:                           # 发送一帧
             temp = [str(x) for x in sendFrame.getFrame()]
-            if counterErr == 9:         # 出错一帧
-                print("Send Error Frame")
+            if counterErr == filterError:         # 出错一帧
+                print("Send Error Frame", next_frame_to_send)
                 counterErr = 0
                 temp[9] = str( 1 - int(temp[9]) )  # 生成一个错误
-
+            else:
+                print("Send Normal Frame", next_frame_to_send)
             data = ''.join(temp)  # 生成数据字符串
             s.sendto(data.encode('utf-8'), ('127.0.0.1', port))
-            print("Send Normal Frame", next_frame_to_send)
-        print("---------------------------")
+
+
 
         try:
             event = s.recv(1024)    # 接受ack
@@ -59,10 +60,12 @@ if __name__ == '__main__':
         event = event.decode()
 
         if event == str(next_frame_to_send):                # 正确送达
+            print("Got ACK", next_frame_to_send)
             next_frame_to_send = next_frame_to_send ^ 1     # 改变序列号
             counterErr += 1
             counterLost += 1
             cnt += 1
+            print("---------------------------")
             print("----------Frame{}----------".format(cnt))
             sendFrame = newFrame()
 
