@@ -30,9 +30,7 @@ def generateCRC(data):
     for i in remainder:
         output.append(i)
 
-    # print("Sequence{}:".format(self.seq))
-    print('{:10}\t{}'.format('CRC Generate：', remainder))
-    print('{:10}\t{}'.format('帧数据：', output))
+    print('{:10}\t{}'.format('Frame data：', output))
 
     return output
 
@@ -57,11 +55,13 @@ def verifyCRC(data):
             quotient.append(0)
 
     remainder = info[-crcSize::]  # 余数
-    print('{:10}\t{}'.format('CRC Verify：', remainder))
+    # print('{:10}\t{}'.format('CRC Verify：', remainder))
 
     strlist = [str(x) for x in remainder]
     data = ''.join(strlist)
     if data == '0000000000000000':
+        print("CRC right")
         return True
     else:
+        print("CRC wrong")
         return False
