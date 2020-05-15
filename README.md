@@ -3,4 +3,4 @@
 ***
 - 3.3 Protocol3 on UDP Socket
 - 3.4 Protocol5 on UDP Socket
-- 3.5 CHAP in PPP
+- 3.5 CHAP
