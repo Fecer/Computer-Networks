@@ -42,9 +42,12 @@ def udp(packet):
     checksum=packet.sum
     len = packet.ulen
 
-    context={"Source Port":sport,"Destination Port":dport,"Checksum":checksum,"Length:":len}
-    print(context)
-    print("--------------------------------")
+    print("Source Port",sport)
+    print("Destination Port",dport)
+    print("Checksum",checksum)
+    print("Length:",len)
+
+    print("----------------------------------------")
     print()
 
 def arp(packet):
@@ -82,30 +85,46 @@ def ip(packet):
     # 取出分片信息
     version = packet.v  # ip version
     headlen = packet.hl  # 首部长度    serve=packet.df #service field
+    DSC=packet.tos&252
+    ECN=packet.tos&3
     id = packet.id  # identification
     totallen = packet.len  # total length
 
+    rb= bool(packet.off&dpkt.ip.IP_RF )
     df = bool(packet.off & dpkt.ip.IP_DF)
     mf = bool(packet.off & dpkt.ip.IP_MF)
     offset = packet.off & dpkt.ip.IP_OFFMASK
 
     ttl = packet.ttl
     proto = packet.p  # protocol
-    if(int(proto)==1):
-        print()
     checksum = packet.sum
 
     src = packet.src
     dst = packet.dst
 
-    output1={'version': version,'headlen':headlen,'id':id,'totallen':totallen}
-    output2 = {'df': df, 'mf': mf, 'offset': offset}
-    output3 = {'ttl': ttl, 'protocol': proto, 'checksum': checksum}
-    output4 = {'src': ip_addr(src), 'dst': ip_addr(dst)}
-    print(output1)
-    print(output2)
-    print(output3)
-    print(output4)
+
+
+    print("Verison: ",version)
+    print("Header Length: ",headlen*5,"(bytes)")
+    print("Differentiated Services Field: ")
+    print("Differentiated Services Codepoint: ",DSC)
+    print("Explicit Congestion Notification:",ECN)
+
+    print("Total Length: ",totallen)
+    print("Identification:",hex(id),"(%d)" %id)
+    print("Flags:")
+    print("{Reserve Bit:",bool(rb))
+    print("Don't fragment: ",bool(df))
+    print("More fragment: ",bool(mf))
+    print("Fragment offset",offset,"}")
+
+    print("Time to live:",ttl)
+    print("Protocol:",proto)
+    print("Header Checksum:",checksum)
+    print("Source:",ip_addr(src))
+    print("Destination:",ip_addr(dst))
+
+
     print("----------------------------------------")
 
     if isinstance(packet.data,dpkt.udp.UDP):
@@ -117,7 +136,7 @@ def ip(packet):
         packet=packet.data
         tcp(packet)
     elif isinstance(packet.data, dpkt.icmp.ICMP):
-        print("ICMP Packet")
+        print("ICMP Packet:")
         packet=packet.data
         icmp(packet)
     else:
@@ -163,6 +182,7 @@ def tcp(packet):
     if packet.data!=b'':
         print()
 
+    #http
     try:
         request = dpkt.http.Request(packet.data)
     except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
@@ -172,17 +192,23 @@ def tcp(packet):
 
 
 def icmp(packet):
-    print()
     type=packet.type;
     code=packet.code;
     checksum=packet.sum;
-    #id=packet.data.id;
-    #seq=packet.data.seq;
-    context={"type":type,"code":code,"checksum":checksum};
-    print("ICMP:",context)
 
+    if(type==11):
+        print("IP packet:")
+        ip(packet.data.ip)
 
-
+    #regular ICMP
+    id=packet.data.id;
+    seq=packet.data.seq;
+    print("Type: ",type)
+    print("Code:", code)
+    print("Checksum: ",checksum)
+    print("ID: ",id)
+    print("Sequence Number: ",seq)
+    print()
 
 def mac_addr(address):
     """Convert a MAC address to a readable/printable string
@@ -206,5 +232,17 @@ def packet_callback(win_pcap, param, header, pkt_data):
 
 if __name__ == '__main__':
     list_device = WinPcapDevices.list_devices()
-    print(list_device)
-    WinPcapUtils.capture_on_device_name(device_name="\\Device\\NPF_{37D76121-6ADD-4C56-BF7B-25CAA90B2BB7}", callback=packet_callback)
+    i=1
+    for keys in list_device.keys():
+        print(i,":",keys,":",list_device[keys])
+        i=i+1
+    id=int(input("选择需要捕获的设备编号:"))
+    i=1
+    for keys in list_device.keys():
+        if i==id:
+            print("catch packet on device:",keys)
+            devicename=keys
+            break
+        else:
+            i=i+1
+WinPcapUtils.capture_on_device_name(devicename, callback=packet_callback)
