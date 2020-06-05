@@ -4,3 +4,5 @@
 - 3.3 Protocol3 on UDP Socket
 - 3.4 Protocol5 on UDP Socket
 - 3.5 CHAP
+- 4.1
+- 5.1
