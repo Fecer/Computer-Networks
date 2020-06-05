@@ -50,6 +50,9 @@ if __name__ == "__main__":
     routingTable = [[],[],[],[],[]]     # 路由表
     cnt = 1
     breakFlag = 1
+    source = -1
+    dest = -1
+    exitFlag = 0
 
     # 初始化全部路由表
     for i in range(len(graph)):
@@ -63,53 +66,72 @@ if __name__ == "__main__":
     curTable = [[], [], [], [], []]
     while True:
         print('--------------', cnt, '--------------')
-        breakFlag = 1                       # 是否退出程序
-        for i in range (len(graph)):
-            curTable[i] = []                # 暂存路由表集合
-            for label in routingTable[i]:   # 将每一条原始路由加入新表中
-                curTable[i].append([label[0], label[1], label[2]])  # 加入原本的路由表项
+        breakFlag = 1
 
+        if source != -1 and exitFlag == 1:                          # 按照输入修改拓扑图
+            for label in routingTable[source]:
+                if label[0] == dest:
+                    label[1] = 99
+            for label in routingTable[dest]:
+                if label[0] == source:
+                    label[1] = 99
+            graph[source][dest] = 99
+            graph[dest][source] = 99
+            source = -1
+
+        curTable = [[], [], [], [], []]
+        for i in range (len(graph)):
+            for label in routingTable[i]:                           # 将每一条原始路由加入新表中
+                curTable[i].append([label[0], label[1], label[2]])  # 加入原本的路由表项
             for j in range (len(graph)):
-                if graph[i][j] > 0 :        # 两个路由器间存在路线
+                if graph[i][j] > 0 :                                # 两个路由器间存在路线
                     nbTable = []
-                    for label in routingTable[j]:   # 给j的路由表加上i到j到距离 存放到nbTable中
+                    for label in routingTable[j]:                   # 给j的路由表加上i到j到距离 存放到nbTable中
                         curCost = label[1] + graph[i][j]
-                        if curCost > 99:            # 超距离的不额外计算
-                            curCost -= (curCost % 99)
+                        if curCost > 99:                            # 超距离的不额外计算
+                            curCost = 99
                         nbTable.append([label[0], curCost, j])
                     for label in nbTable:
                         tempDest = label[0]
                         find = -1
-                        for label2 in curTable[i]:          #  在新路由表中查找同目的地信息
+                        for label2 in curTable[i]:                  #  在新路由表中查找同目的地信息
                             if label2[0] == tempDest:
-                                find = curTable[i].index(label2)     # 相同的坐标
+                                find = curTable[i].index(label2)    # 相同的坐标
                                 break
-
-                        if find == -1:                      # 没找到
-                            if label[0] != i:               # dest不是出发点，可以更新
+                        if find == -1:                              # 没找到
+                            if label[0] != i:                       # dest不是出发点，可以更新
                                 curTable[i].append([label[0], label[1], label[2]])
                                 breakFlag = 0
-                        else:                               # 找到了
-                            if label2[2] == j:              # 下一跳是目的地
-                                if label2[1] != label[1]:   # 更新距离
-                                    label2[1] = label[1]
-                                    breakFlag = 0
-                            else:                           # 下一跳不是目的地
-                                if label[1] < label2[1]:    # 选取更小的路径
+                        else:                                       # 找到了
+                            if label2[2] != j:                      # 下一跳不是目的地
+                                if label[1] < label2[1]:            # 选取更小的路径
                                     label2[1] = label[1]
                                     label2[2] = label[2]
+                                    breakFlag = 0
+                            else:                                   # 下一跳不是目的地
+                                if label2[1] != label[1]:           # 更新距离
+                                    label2[1] = label[1]
                                     breakFlag = 0
 
         output(curTable)
         print()
-        routingTable = [[],[],[],[],[]]
+        routingTable = [[],[],[],[],[]]                             # 刷新并保存路由表
         for i in range (len(graph)):
             for label in curTable[i]:
                 routingTable[i].append([label[0], label[1], label[2]])
-        if breakFlag == 1:
-            break
 
-        cnt += 1        # 下一个更新间隔
+        if breakFlag == 1:                                          # 路由稳定后
+            if exitFlag == 0:                                       # 更改拓扑结构
+                # Input：3,4
+                print('输入需要断开的链接两端名称：')
+                source, dest = map(int, input().split(','))
+                exitFlag = 1
+                if source >= len(graph) or dest >= len(graph):      # 非法输入越界
+                    exit(1)
+            else:
+                break
+
+        cnt += 1                                                    # 下一个更新间隔
 
 
 
