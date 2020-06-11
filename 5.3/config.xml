@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<values title="Info">
+    <BigIPTotalLen>4000</BigIPTotalLen>
+    <IDTotal>666</IDTotal>
+    <MTU>1500</MTU>
+    <FragNum>666</FragNum>
+    <TotalLen>1500,1500,1040</TotalLen>
+    <ID>888,888,888</ID>
+    <FragMF>1,1,0</FragMF>
+    <FragOffset>0,185,370</FragOffset>
+</values>
