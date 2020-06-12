@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print("Destination IP",dip,"(",pseudo_dip,")")
     print("Reserved:","0","(",pseudo_res,")")
     print("Protocol:","6","(",pseudo_ptc,")")
-    print("Total Length:",len(tcpheader+tcpsegment)/2,"(",pseudo_len,")")
+    print("Total Length:",int(len(tcpheader+tcpsegment)/2),"(",pseudo_len,")")
 
     #TCP
     #source port
