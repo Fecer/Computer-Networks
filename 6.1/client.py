@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
     ip = sys.argv[1]
     port = sys.argv[2]
-    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #udp
     #client.bind(ip,int(port))
 
     msg = sys.argv[3]
