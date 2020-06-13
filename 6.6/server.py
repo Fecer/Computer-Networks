@@ -27,12 +27,6 @@ if __name__ == '__main__':
                     if data:
                         print('接收到消息 {}({} bytes) 来自 {}'.format(data.decode('utf-8'), len(data), client_address))
                         # 返回响应数据，将客户端发送来的数据转大写
-                        str = data.decode()
-                        str = str.upper()
-                        print("转换为大写：", str)
-                        #发送
-                        client_socket.send(str.encode())
-                        print("发送消息：",str,"到：",client_address)
                     else:
                         #客户端断开了连接
                         break

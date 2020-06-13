@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     client.send(msg.encode('utf-8'))
 
-    data, server_addr = client.recvfrom(BUFSIZE)
-    print("从服务器端返回了 : ", data.decode())
+    #data, server_addr = client.recvfrom(BUFSIZE)
+    #print("从服务器端返回了 : ", data.decode())
 
     client.close()
