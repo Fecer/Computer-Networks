@@ -10,7 +10,7 @@ def ranstr(num):
 
     salt = ''
     for i in range(num):
-        salt += "0"
+        salt += random.choice(str)
 
     return salt
 
