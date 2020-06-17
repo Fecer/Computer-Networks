@@ -28,7 +28,7 @@ for i in rttlist:
         EstimatedRTT=SampleRTT
     else:
         EstimatedRTT=(1-alpha)*EstimatedRTT+alpha*SampleRTT
-    DevRTT=(1-beta)*DevRTT+beta
+    DevRTT=(1-beta)*DevRTT+beta*abs(SampleRTT-EstimatedRTT)
     print("the new adapted RTT : %.2f ms "%EstimatedRTT)
     print("current RTO: %.2f ms"%(EstimatedRTT+4*DevRTT))
 
